@@ -1,5 +1,5 @@
 # Table of contents
 
 * [Overview](README.md)
-* [Linear Regression\(선형 회귀\)](linear-regression.md)
+* [Linear Regression on Boston Housing Dataset](linear-regression.md)
 
