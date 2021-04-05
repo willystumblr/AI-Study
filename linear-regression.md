@@ -53,7 +53,71 @@ $$
 
 **The size of these steps** is called the _learning rate_. With a high learning rate we can cover more ground each step, but we risk overshooting the lowest point since the slope of the hill is constantly changing. With a very low learning rate, we can confidently move in the direction of the negative gradient since we are recalculating it so frequently. A low learning rate is more precise, but calculating the gradient is time-consuming, so it will take us a very long time to get to the bottom.
 
+### Gradient Descent in PyTorch
 
+#### Tensor
+
+multidimensional array
+
+![vector, matrix, and tensor](.gitbook/assets/image%20%284%29.png)
+
+> 텐서는 일관된 유형\(`dtype`이라고 불림\)을 가진 다차원 배열입니다. 지원되는 모든 `dtypes`은 [`tf.dtypes.DType`](https://www.tensorflow.org/api_docs/python/tf/dtypes/DType?hl=ko)에서 볼 수 있습니다.
+>
+> [NumPy](https://numpy.org/devdocs/user/quickstart.html)에 익숙하다면, 텐서는 일종의 `np.arrays`와 같습니다.
+>
+> 모든 텐서는 Python 숫자 및 문자열과 같이 변경할 수 없습니다. 텐서의 내용을 업데이트할 수 없으며 새로운 텐서를 만들 수만 있습니다.
+
+#### Creation of tensor and initialization
+
+```python
+import torch
+X = torch.Tensor(2,3) #난수가 들어감. 2X3 tensor
+X = torch.tensor([1,2,3],[4,5,6])
+```
+
+{% hint style="success" %}
+**Q. What is the difference between `torch.Tensor` and `torch.tensor`?**  
+Our `torch.Tensor` constructor is overloaded to do the same thing as both `torch.tensor` and `torch.empty`. We thought this overload would make code confusing, so _we split_ `torch.Tensor` into `torch.tensor` and `torch.empty`.
+{% endhint %}
+
+```python
+import torch
+# z= 2*x^2 + 3에서 x 기울기 구하기
+
+x = torch.tensor(data=[2.0,3.0], requires_grad = True)
+#텐서를 생성, 기울기를 사용하도록 지정함
+y = x**2 
+z = 2*x + 3
+
+target = torch.tensor([3.0, 4.0])
+
+loss = torch.sum(torch.abs(z-target))
+loss.backward()
+
+print(x.grad) #y.grad z.grad ==> warning!
+print(y.retain_grad(), z.retain_grad())
+# If you want to obtain non-leaf node's gradient, use .retain_grad()
+```
+
+```text
+tensor([2., 2.])
+None None
+```
+
+**Functions**
+
+* `torch.tensor`
+
+  parameter: `data`, `dtype`, `device`, `requires_grad`...  
+  \*`requires_grad`: 텐서에 대한 기울기를 저장할 것인지 여부를 지정하는 parameter   
+  =&gt; `True/False`
+
+* `torch.abs(z-target)`: computing absolute value of `z-target`
+* `torch.sum`: Returns the sum of all elements in the `input` tensor.
+* `loss.backward()`: 연산 그래프 따라가면서 leaf node의 gradient를 계산한다고 함. 
+  * leaf node: "`x`"
+
+### Linear Regression Model
 
 
 
