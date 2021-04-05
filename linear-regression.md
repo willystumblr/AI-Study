@@ -108,8 +108,8 @@ None None
 
 * `torch.tensor`
 
-  parameter: `data`, `dtype`, `device`, `requires_grad`...  
-  \*`requires_grad`: 텐서에 대한 기울기를 저장할 것인지 여부를 지정하는 parameter   
+  argument: `data`, `dtype`, `device`, `requires_grad`...  
+  \*`requires_grad`: 텐서에 대한 기울기를 저장할 것인지 여부를 지정하는 argument   
   =&gt; `True/False`
 
 * `torch.abs(z-target)`: computing absolute value of `z-target`
@@ -118,6 +118,72 @@ None None
   * leaf node: "`x`"
 
 ### Linear Regression Model
+
+```python
+import torch
+import torch.nn as nn #neural net. model / Linear function 사용
+import torch.optim as optim #grad descent 
+import torch.nn.init as init #values required for initialization of tensor
+```
+
+```python
+num_data = 100 #number of data used
+num_epoch = 500 #number of repitition of gradient descent
+
+x = init.uniform_(torch.Tensor(num_data, 1), -10, 10)
+noise = init.normal_(torch.FloatTensor(num_data, 1), std=1)
+y = 2*x+3
+y_noise = y + noise
+```
+
+* line 4: 100X1 tensor 생성, 이를 `init.uniform_()` 함수 사용해 -10~10까지 균등하게 초기화 \(randomly\)
+* line 5: y =&gt; -17≤ $$2x + 3$$ ≤ 23
+* line 6, 7: noise - _Gaussian noise_ **Why?** 데이터에 기본적으로 노이즈가 추가되어 있음. =&gt; reality
+
+```python
+model = nn.Linear(1,1)
+cost_func = nn.L1Loss()
+```
+
+> Applies a linear transformation to the incoming data:   
+> $$y = xA^T + b$$
+
+* `Linear`: \# of features\(input\), \# of features\(output\), bias 사용 여\(?\)  
+  parameter: weight, bias
+
+  --&gt; 1개의 input feature x, 1개의 output features
+
+* `L1Loss()`: `y_noise`와 `model`의 차이
+
+```python
+optimizer = optim.SGD(model.parameters(), lr = 0.01)
+```
+
+최적화 함수; 
+
+* `model.parameters()`: passing w and b from model
+* `lr`: learning rate 
+
+```python
+label = y_noise
+for i in range(num_epoch) :
+    optimizer.zero_grad()
+    output = model(x)
+    
+    loss = cost_func(output, label)
+    loss.backward()
+    optimizer.step()
+    
+    if i%10 == 0:
+        print(loss.data)
+
+param_list = list(model.parameters())
+print(param_list[0].item(), param_list[1].item())
+```
+
+* `zero_grad()`: gradient 초기화, 새로운 gradient를 구해야하기 때문
+
+학습이 거듭됨에 따라 오차가 계속 줄어드는 것을 확인할 수 있
 
 
 
