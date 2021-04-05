@@ -185,5 +185,3 @@ print(param_list[0].item(), param_list[1].item())
 
 학습이 거듭됨에 따라 오차가 계속 줄어드는 것을 확인할 수 있
 
-
-
