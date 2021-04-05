@@ -183,5 +183,5 @@ print(param_list[0].item(), param_list[1].item())
 
 * `zero_grad()`: gradient 초기화, 새로운 gradient를 구해야하기 때문
 
-학습이 거듭됨에 따라 오차가 계속 줄어드는 것을 확인할 수 있
+학습이 거듭됨에 따라 오차가 계속 줄어드는 것을 확인할 수 있음. 
 
