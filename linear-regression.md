@@ -185,3 +185,144 @@ print(param_list[0].item(), param_list[1].item())
 
 학습이 거듭됨에 따라 오차가 계속 줄어드는 것을 확인할 수 있음. 
 
+## Boston Housing Dataset
+
+{% embed url="https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html" %}
+
+\[설명\] This dataset contains information collected by the U.S Census Service concerning housing in the area of Boston Mass. 
+
+### **Peek dataset & Preprocessing**
+
+```python
+from sklearn.datasets import load_boston
+import pandas as pd
+
+bos = load_boston()
+bos.keys()
+```
+
+dict-formatted data; line 5 shows:
+
+`dict_keys(['data', 'target', 'feature_names', 'DESCR'])`
+
+1. data: the content of features, which are what we focus on.
+2. target: the price of houses, which are **what we need to predict**.
+3. feature\_names: as its name, feature names. storing the meanings of each column respectively.
+4. DESCR: the description of this dataset.
+5. filename: the path of this dataset storing.
+
+굳이 사이즈를 확인하고 싶으면
+
+```python
+bos.data.shape
+```
+
+=&gt; \(506, 13\)
+
+```python
+df = pd.DataFrame(bos.data)
+df.columns = bos.feature_names
+df['Price'] = bos.target
+df.head()
+```
+
+1: `pd.DataFrame`: _Two-dimensional_, size-mutable, potentially heterogeneous tabular data  
+2: `feature_names`, i.e. column names goes to `df`'s column  
+3: setting `bos.target` as 'Price'  
+4: peek the first 5 rows of data by `.head()` after adding a ‘Price’ column to our data.
+
+### **Split training data and testing data**
+
+```python
+data = df[df.columns[:-1]]
+data = data.apply(
+    lambda x: (x - x.mean()) / x.std()
+)
+
+data['Price'] = df.Price
+```
+
+{% hint style="info" %}
+**`lambda` expression**  
+In Python, an anonymous function is a [function](https://www.programiz.com/python-programming/function) that is defined without a name.
+
+While normal functions are defined using the `def` keyword in Python, anonymous functions are defined using the `lambda` keyword.
+
+`lambda arguments: expression`
+
+Lambda functions can have any number of arguments but **only one expression**. The expression is evaluated and returned. Lambda functions can be used wherever function objects are required.
+{% endhint %}
+
+=&gt; to get the normalized value of each feature 
+
+```python
+import seaborn as sns 
+import matplotlib.pyplot as plt 
+
+sns.set(rc={'figure.figsize':(11.7,8.27)})
+sns.distplot(df['Price'], bins=30)
+plt.show()
+```
+
+![](.gitbook/assets/image%20%285%29.png)
+
+### Splitting Data into Test Sets, Training Sets
+
+```python
+import numpy as np
+
+X = data.drop('Price', axis=1).to_numpy()
+Y = data['Price'].to_numpy()
+
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=42)
+print(X_train.shape)    #(354, 13)
+print(X_test.shape)     #(152, 13)
+print(Y_train.shape)    #(354,)
+print(Y_test.shape)     #(152,)
+```
+
+Format data as an array in numpy, divide our data as a training set and a testing set  
+=&gt; "drop은 row or column label을 입력하면 그 값들을 지워줍니다. axis = 1은 각 row값을 가져옵니다." --&gt; 'Price' column을 제거한 값을 X에 넣어주겠다는 의, Y는 반면에 'Price'를 부여하겠다는 의미
+
+```python
+correlation_matrix = df.corr().round(2)
+# annot = True to print the values inside the square
+sns.heatmap(data=correlation_matrix, annot=True)
+```
+
+* `corr()`: 데이터 프레임의 열 사이의 상관 관계
+
+![](.gitbook/assets/image%20%286%29.png)
+
+## Constructing Linear Regression on PyTorch
+
+```python
+import torch
+
+n_train = X_train.shape[0] #354
+X_train = torch.tensor(X_train, dtype=torch.float)
+X_test = torch.tensor(X_test, dtype=torch.float)
+Y_train = torch.tensor(Y_train, dtype=torch.float).view(-1, 1)
+Y_test = torch.tensor(Y_test, dtype=torch.float).view(-1, 1)
+```
+
+Setting `n_train` as 354, and saving each of the four as tensor
+
+PyTorch allows a tensor to be a `View` of an existing tensor. View tensor shares _the same underlying data with its base tensor._ Supporting `View` avoids explicit data copy, thus allows us to do fast and memory efficient reshaping, slicing and element-wise operations.
+
+```python
+w_num = X_train.shape[1]
+net = torch.nn.Sequential(
+    torch.nn.Linear(w_num, 1)
+)
+
+torch.nn.init.normal_(net[0].weight, mean=0, std=0.1)
+torch.nn.init.constant_(net[0].bias, val=0)
+```
+
+* `torch.nn.Sequential`: 간단히 말하자면 여러 nn.Module을 한 컨테이너에 집어넣고 한 번에 돌리는 방법. `nn.Sequential`은 코드에 적힌 순서대로 값을 전달해 처리한다. 빠르고 간단히 적을 수 있기 때문에 간단한 모델을 구현할 때에 쓰면 된다는 것 같다.
+* `torch.nn.Linear`: Applies a linear transformation to the incoming data:  **y = xA^T + b**
+* Fills the input Tensor with values drawn from the normal distribution \mathcal{N}\(\text{mean}, \text{std}^2\)N\(mean,std 2 \) .
+
