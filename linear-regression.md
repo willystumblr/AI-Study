@@ -324,5 +324,7 @@ torch.nn.init.constant_(net[0].bias, val=0)
 
 * `torch.nn.Sequential`: 간단히 말하자면 여러 nn.Module을 한 컨테이너에 집어넣고 한 번에 돌리는 방법. `nn.Sequential`은 코드에 적힌 순서대로 값을 전달해 처리한다. 빠르고 간단히 적을 수 있기 때문에 간단한 모델을 구현할 때에 쓰면 된다는 것 같다.
 * `torch.nn.Linear`: Applies a linear transformation to the incoming data:  **y = xA^T + b**
-* Fills the input Tensor with values drawn from the normal distribution \mathcal{N}\(\text{mean}, \text{std}^2\)N\(mean,std 2 \) .
+* Fills the input Tensor with values drawn from the normal distribution :
+
+$$\mathcal{N}(\text{mean}, \text{std}^2)$$  
 
