@@ -328,3 +328,37 @@ torch.nn.init.constant_(net[0].bias, val=0)
 
 $$\mathcal{N}(\text{mean}, \text{std}^2)$$  
 
+```python
+datasets = torch.utils.data.TensorDataset(X_train, Y_train)
+train_iter = torch.utils.data.DataLoader(datasets, batch_size=10, shuffle=True)
+
+loss = torch.nn.MSELoss()
+optimizer = torch.optim.SGD(net.parameters(), lr=0.05)
+```
+
+* constructing a Dataset of Tensor.
+* generate a DataLoder by using this Dataset. `batch_size` is the size of each batch in which data returned. Data will be returned in _random sequence_ if shuffle is True.
+* set loss function with mean squared error
+* optimize the neural network by stochastic\(확률적, 추츨적\) gradient descent.
+
+```python
+num_epochs = 300
+for epoch in range(num_epochs):
+    for x, y in train_iter:
+        output = net(x)
+        l = loss(output, y)
+        optimizer.zero_grad()
+        l.backward()
+        optimizer.step()
+    print("epoch {} loss: {:.4f}".format(epoch + 1, l.item()))
+```
+
+**Process**
+
+1. Load a batch of data.
+2. Predict the batch of the data through _net_.
+3. Calculate the loss value by predict value and true value.
+4. Clear the grad value optimizer stored.
+5. **Backpropagate** the loss value. ==&gt; NN에 나오는 거 같은
+6. Update optimizer
+
