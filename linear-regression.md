@@ -60,7 +60,7 @@ _**\*It must be chosen carefully to end up with local minima.**_
 
 #### Gradient Descent Algorithm
 
-![Gradient Descent Algorithm](.gitbook/assets/image%20%289%29.png)
+![Gradient Descent Algorithm](.gitbook/assets/image%20%2810%29.png)
 
 The goal of the gradient descent algorithm is to minimize the given function \(say cost function\). To achieve this goal, it performs two steps iteratively:
 
