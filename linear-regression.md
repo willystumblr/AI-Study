@@ -53,6 +53,22 @@ $$
 
 **The size of these steps** is called the _learning rate_. With a high learning rate we can cover more ground each step, but we risk overshooting the lowest point since the slope of the hill is constantly changing. With a very low learning rate, we can confidently move in the direction of the negative gradient since we are recalculating it so frequently. A low learning rate is more precise, but calculating the gradient is time-consuming, so it will take us a very long time to get to the bottom.
 
+_**\*It must be chosen carefully to end up with local minima.**_
+
+* If the learning rate is too high, we might **OVERSHOOT** the minima and keep bouncing, without reaching the minima
+* If the learning rate is too small, the training might turn out to be too long
+
+#### Gradient Descent Algorithm
+
+![Gradient Descent Algorithm](.gitbook/assets/image%20%289%29.png)
+
+The goal of the gradient descent algorithm is to minimize the given function \(say cost function\). To achieve this goal, it performs two steps iteratively:
+
+1. **Compute the gradient** \(slope\), the first order derivative of the function at that point
+2. **Make a step \(move\) in the direction opposite to the gradient**, opposite direction of slope increase from the current point by alpha times the gradient at that point
+
+{% embed url="http://shuuki4.github.io/deep%20learning/2016/05/20/Gradient-Descent-Algorithm-Overview.html" caption="Various Optimization Algorithm" %}
+
 ### Gradient Descent in PyTorch
 
 #### Tensor
@@ -342,7 +358,7 @@ optimizer = torch.optim.SGD(net.parameters(), lr=0.05)
 * optimize the neural network by stochastic\(확률적, 추츨적\) gradient descent.
 
 ```python
-num_epochs = 300
+num_epochs = 7
 for epoch in range(num_epochs):
     for x, y in train_iter:
         output = net(x)
@@ -359,6 +375,6 @@ for epoch in range(num_epochs):
 2. Predict the batch of the data through _net_.
 3. Calculate the loss value by predict value and true value.
 4. Clear the grad value optimizer stored.
-5. **Backpropagate** the loss value. ==&gt; NN에 나오는 거 같은
+5. **Backpropagate** the loss value. ==&gt; NN에 나오는 거 같은..?
 6. Update optimizer
 
