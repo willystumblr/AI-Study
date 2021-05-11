@@ -50,5 +50,9 @@ At each neuron in a hidden or output layer, the processing happens in two steps:
 
 ###  <a id="fe0d"></a>
 
+#### Backpropagation
+
+{% embed url="http://neuralnetworksanddeeplearning.com/chap2.html" %}
+
 
 
