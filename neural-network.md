@@ -68,7 +68,73 @@ $$
 
 ## Implementation of NN Model
 
-위의 모든 과정을 하나의 함수로 처리하기: `loss.backward()` 
+위의 모든 과정을 하나의 함수로 처리: `loss.backward()` 
+
+```python
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.init as init
+```
+
+`torch.nn` package 사용
+
+```python
+num_data = 1000
+num_epoch = 10000
+```
 
 
+
+```python
+noise = init.normal_(torch.FloatTensor(num_data,1), std=1)
+x = init.uniform_(torch.Tensor(num_data, 1), -15, 15)
+y = (x**2) + 3
+y_noise = y + noise
+```
+
+
+
+```python
+model = nn.Sequential(
+    nn.Linear(1,6),
+    nn.ReLU(),
+    nn.Linear(6,10),
+    nn.ReLU(),
+    nn.Linear(10, 6),
+    nn.ReLU(),
+    nn.Linear(6,1),
+)
+```
+
+
+
+```python
+loss_func = nn.L1Loss()
+optimizer = optim.SGD(model.parameters(), lr=0.0002)
+```
+
+
+
+```python
+loss_array = []
+for i in range(num_epoch):
+    optimizer.zero_grad()
+    output = model(x)
+    loss = loss_func(output, y_noise)
+    loss.backward()
+    optimizer.step()
+    
+    loss_array.append(loss)
+```
+
+
+
+```python
+import matplotlib.pyplot as plt
+plt.plot(loss_array)
+plt.show()
+```
+
+![](.gitbook/assets/image%20%2813%29.png)
 
