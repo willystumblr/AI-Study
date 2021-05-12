@@ -48,11 +48,27 @@ At each neuron in a hidden or output layer, the processing happens in two steps:
 1. **Preactivation:** it is a _weighted sum of inputs_ i.e. the _linear transformation of weights_ w.r.t to inputs available. Based on this _aggregated sum_ and _activation function_ the neuron makes a decision whether to pass this information further or not.
 2. **Activation:** the calculated weighted sum of inputs is passed to the activation function. An activation function is a mathematical function which adds non-linearity to the network. There are four commonly used and popular activation functions — sigmoid, hyperbolic tangent\(tanh\), ReLU and Softmax.
 
-###  <a id="fe0d"></a>
+앞에 y\*을 구하는 과정이 전파\(forward propagation\)
 
-#### Backpropagation
+### Backpropagation
 
-{% embed url="http://neuralnetworksanddeeplearning.com/chap2.html" %}
+Cost function의 partial derivative를 구하는 알고리즘
+
+> The expression tells us how quickly the cost changes when we change the weights and biases.
+
+#### loss
+
+아래는 손실을 구하는 과정, w\_2는 chain rule을 사용하여 구함 
+
+$$
+\text{loss} = y^{*} - y = w_3 \times \text{sig}(w_2 \times \text{sig}(w_1 \times x + b_1) + b_2) + b_3 - y  \\ \frac{\partial \text{loss}}{\partial w_3} = \text{sig}(w_2 \times \text{sig}(w_1 \times x + b_1) + b_2) \\ \frac{\partial \text{loss}}{\partial b_3} = 1 \\ \text{Let } w_2 \times \text{sig}(w_1 \times x+ b_1) + b_2 = h_{2\_ in} \\ \frac{\partial \text{loss}}{\partial w_2} = w_3 \times \text{sig}( h_{2\_ in}) \times \text{sig}(w_1 \times x + b_1)
+$$
+
+{% embed url="http://neuralnetworksanddeeplearning.com/chap2.html" caption="Deeper look into backpropagation" %}
+
+## Implementation of NN Model
+
+위의 모든 과정을 하나의 함수로 처리하기: `loss.backward()` 
 
 
 
