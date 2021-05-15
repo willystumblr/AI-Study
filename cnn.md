@@ -36,13 +36,13 @@
 * Convolutional Neural Network
 * Output label \(image class\)
 
-#### Steps
+### Steps
 
-* Convolution
-* ReLU layer
-* Pooling
-* Flatening
-* Full Connection
+* _Convolution_
+* _ReLU layer_
+* _Pooling_
+* _Flatening_
+* _Full Connection_
 
 ### Step 1-1: Convolution
 
@@ -58,13 +58,45 @@
 * Stride만큼 이동, 같은 연산을 하여 feature map의 cell에 값을 삽입; 반복
 * 한 행에 대해 연산이 끝나면 다음 행으로 이동하여 반복
 
-![&#xD569;&#xC131;&#xACF1; &#xC5F0;&#xC0B0; &#xC2DC;&#xC791; &#xB2E8;&#xACC4;](.gitbook/assets/image%20%2815%29.png)
+![&#xD569;&#xC131;&#xACF1; &#xC5F0;&#xC0B0; &#xC2DC;&#xC791; &#xB2E8;&#xACC4;](.gitbook/assets/image%20%2816%29.png)
 
-![&#xD569;&#xC131;&#xACF1; &#xC5F0;&#xC0B0; &#xB9C8;&#xC9C0;&#xB9C9; &#xB2E8;&#xACC4;](.gitbook/assets/image%20%2816%29.png)
+![&#xD569;&#xC131;&#xACF1; &#xC5F0;&#xC0B0; &#xB9C8;&#xC9C0;&#xB9C9; &#xB2E8;&#xACC4;](.gitbook/assets/image%20%2818%29.png)
 
 ### Step 1-2: ReLU\(**Rectified Linear Unit**\) layer
 
 이미지의 비선형성을 추가하기 위해 사용하는 활성화 함수 중 하나로, ReLU, Leaky ReLU, Randomized Leaky ReLU의 세 종류가 있음.
+
+#### ReLU
+
+![](.gitbook/assets/image%20%2815%29.png)
+
+* 0 이하의 값이 들어오면 활성화 값을 0으로, 그 이상의 값은 _그대로 전달,_ 따라서 sigmoid function에 비해 계산 속도가 매우 빨라짐.
+* **dying neuron**: 손실이 커져 가중치, 편차\(weight, bias\)가 음의 값이 되면 어떠한 입력에도 활성화 값이 0이 되기 때문에,  neuron의 업데이트가 멈춤
+* 학습속도가 빠름\(기울기가 1이라서?\)
+
+#### Leaky ReLU
+
+![](.gitbook/assets/image%20%2817%29.png)
+
+위의 dying neuron 문제를 해결하기 위해 0 이하인 입력에 대해 입력값에 a를 곱한 값\(일반적으로 0.01로 설정한다고 함\)을 출력으로 내보냄.
+
+#### Randomized leaky ReLU
+
+leaky ReLU의 a값을 임의로 지정하여 출력을 내보내는 ReLU
+
+### Step 2: Pooling
+
+* Average pooling
+* Max pooling
+* Sum pooling
+
+#### Max Pooling
+
+> The purpose of max pooling is enabling the convolutional neural network to detect the given image when presented with the image in any manner.
+
+이미지의 구간에서 maximum value를 찾아 pooled feature map에 삽입, "가장 강한 자극만 남기고 나머지 무시, 가장 비슷한 부분을 전달하는 방식"
+
+You would **still proceed despite the fact that half of your box will be empty**.
 
 
 
