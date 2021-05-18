@@ -98,23 +98,23 @@ leaky ReLU의 a값을 임의로 지정하여 출력을 내보내는 ReLU
 
 이미지의 구간에서 maximum value를 찾아 pooled feature map에 삽입, "가장 강한 자극만 남기고 나머지 무시, 가장 비슷한 부분을 전달하는 방식"
 
-![Process of Max Pooling](.gitbook/assets/image%20%2819%29.png)
+![Process of Max Pooling](.gitbook/assets/image%20%2820%29.png)
 
 #### Average Pooling
 
 feature map에서 각각의 patch의 average 값을 계산, 이를 pooled featured map에 삽입하는 방식. 
 
-![Process of Average Pooling](.gitbook/assets/image%20%2820%29.png)
+![Process of Average Pooling](.gitbook/assets/image%20%2821%29.png)
 
 ### Step 3: Flattening
 
-![Flattening](.gitbook/assets/image%20%2822%29.png)
+![Flattening](.gitbook/assets/image%20%2823%29.png)
 
 Pooled feature map을 column vector 형태로 'flatten'하는 과정. Feature Map의 값을 이후에 ANN의 input layer에 삽입해줘야 하기 때문에, 그 과정을 용이하게 하기 위함.
 
 ### Step 4: Full Connection
 
-![](.gitbook/assets/image%20%2821%29.png)
+![](.gitbook/assets/image%20%2822%29.png)
 
 세 개의 계층:
 
@@ -147,7 +147,7 @@ Flattening 과정으로 얻은 column vector의 element 각각이 input으로 �
 * After we're done with pooling, we end up with a pooled feature map. 
 * We then flatten our pooled feature map before inserting into an artificial neural network.
 
-## MNIST Handwritten Digit Dataset Classification with PyTorch
+## MNIST Handwritten Digit Dataset
 
 ### MNIST Handwritten Digit Dataset
 
@@ -180,8 +180,82 @@ torch.manual_seed(random_seed)
 * `learning_rate`, `momentum`: hyperparameters
 * line 8, 10: 정확도를 올려주는 일종의 장치? 난수 생성
 * `torch.backends.cudnn.enabled`: cuDNN\(cuda의 딥러닝 라이브러리\)을 disable해줌 
+* `batch_size`: 일괄적으로 데이터를 처리해주기 때문에 training/test set에 대해 이러한 변수 이름을 설정해 줌. 여기서는 training set을 64, test set을 1000으로 설정함.
 
+```python
+train_loader = torch.utils.data.DataLoader(
+  torchvision.datasets.MNIST('/Users/minsk/', train=True, download=True,
+                             transform=torchvision.transforms.Compose([
+                               torchvision.transforms.ToTensor(),
+                               torchvision.transforms.Normalize(
+                                 (0.1307,), (0.3081,))
+                             ])),
+  batch_size=batch_size_train, shuffle=True)
 
+test_loader = torch.utils.data.DataLoader(
+  torchvision.datasets.MNIST('/Users/minsk/', train=False, download=True,
+                             transform=torchvision.transforms.Compose([
+                               torchvision.transforms.ToTensor(),
+                               torchvision.transforms.Normalize(
+                                 (0.1307,), (0.3081,))
+                             ])),
+  batch_size=batch_size_test, shuffle=True)
+```
 
+* `DataLoader`: datasets, batch size, shuffle 을 argument로 함. 학습을 위한 방대한 데이터를 미니배치 단위로 처리할 수 있고, 데이터를 무작위로 섞음으로써 학습의 효율성을 향상시킬 수 있다는 장점이 있음.
 
+![Downloading datasets using DataLoader](.gitbook/assets/screen-shot-2021-05-18-at-10.55.51-pm.png)
+
+```python
+examples = enumerate(test_loader)
+batch_idx, (example_data, example_targets) = next(examples)
+
+example_data.shape #torch.Size([1000, 1, 28, 28])
+```
+
+```python
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+for i in range(6):
+  plt.subplot(2,3,i+1)
+  plt.tight_layout()
+  plt.imshow(example_data[i][0], cmap='gray', interpolation='none')
+  plt.title("Ground Truth: {}".format(example_targets[i]))
+  plt.xticks([])
+  plt.yticks([])
+fig
+```
+
+![](.gitbook/assets/image%20%2819%29.png)
+
+## MNIST Datasets Recognition using PyTorch & CNN
+
+### Building NN
+
+```python
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+```
+
+```python
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
+        self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
+        self.conv2_drop = nn.Dropout2d()
+        self.fc1 = nn.Linear(320, 50)
+        self.fc2 = nn.Linear(50, 10)
+
+    def forward(self, x):
+        x = F.relu(F.max_pool2d(self.conv1(x), 2))
+        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
+        x = x.view(-1, 320)
+        x = F.relu(self.fc1(x))
+        x = F.dropout(x, training=self.training)
+        x = self.fc2(x)
+        return F.log_softmax(x)
+```
 
