@@ -30,6 +30,8 @@
 
 ## Process of CNN
 
+[https://www.superdatascience.com/blogs/the-ultimate-guide-to-convolutional-neural-networks-cnn](https://www.superdatascience.com/blogs/the-ultimate-guide-to-convolutional-neural-networks-cnn)
+
 ### Overview
 
 * input image
@@ -97,6 +99,14 @@ leaky ReLU의 a값을 임의로 지정하여 출력을 내보내는 ReLU
 이미지의 구간에서 maximum value를 찾아 pooled feature map에 삽입, "가장 강한 자극만 남기고 나머지 무시, 가장 비슷한 부분을 전달하는 방식"
 
 You would **still proceed despite the fact that half of your box will be empty**.
+
+![Process of Max Pooling](.gitbook/assets/image%20%2819%29.png)
+
+#### Average Pooling
+
+feature map에서 각각의 patch의 average 값을 계산, 이를 pooled featured map에 삽입하는 방식. 
+
+![Process of Average Pooling](.gitbook/assets/image%20%2820%29.png)
 
 
 
