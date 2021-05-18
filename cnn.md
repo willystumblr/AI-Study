@@ -98,8 +98,6 @@ leaky ReLU의 a값을 임의로 지정하여 출력을 내보내는 ReLU
 
 이미지의 구간에서 maximum value를 찾아 pooled feature map에 삽입, "가장 강한 자극만 남기고 나머지 무시, 가장 비슷한 부분을 전달하는 방식"
 
-You would **still proceed despite the fact that half of your box will be empty**.
-
 ![Process of Max Pooling](.gitbook/assets/image%20%2819%29.png)
 
 #### Average Pooling
@@ -112,7 +110,7 @@ feature map에서 각각의 patch의 average 값을 계산, 이를 pooled featur
 
 ![Flattening](.gitbook/assets/image%20%2822%29.png)
 
-Pooled feature map을 column vector 형태로 'flatten'하는 과정. Feature Map의 값을 이후에 ANN에 삽입해줘야 하기 때문에, 그 과정을 용이하게 하기 위함.
+Pooled feature map을 column vector 형태로 'flatten'하는 과정. Feature Map의 값을 이후에 ANN의 input layer에 삽입해줘야 하기 때문에, 그 과정을 용이하게 하기 위함.
 
 ### Step 4: Full Connection
 
@@ -126,7 +124,7 @@ Pooled feature map을 column vector 형태로 'flatten'하는 과정. Feature Ma
 
 1\) Input layer
 
-Flattening 과정으로 얻은 column vector의 element 각각이 input으로 들어감. Step 1-4를 거쳐 얻은 값들이기 때문에, 각각의 element는 "충분한 accuracy"가 있다고 판단한다.
+Flattening 과정으로 얻은 column vector의 element 각각이 input으로 들어감. Step 1-4를 거쳐 얻은 값들이기 때문에, 각각의 element는 "충분한 accuracy"가 있다고 가정한다.
 
 2\) Fully-connected layer ~ Output layer
 
@@ -136,7 +134,7 @@ Flattening 과정으로 얻은 column vector의 element 각각이 input으로 �
 
 * fully-connected layer의 neuron이 이미지에 있는 특정한 feature을 탐지\(_detect_\)한다; 가령 개와 고양이 사진을 분류할 때, '코'에 해당하는 부분
 * 합성곱 연산으로 나온 값을 바탕으로 개/고양이의 값과 비교한다.
-* Output layer에 전달, 이미지를 분류함. 
+* Output layer에 전달, 이미지를 분류. 
 
 즉 합성곱 연산 + ANN 기반으로 동작함.
 
@@ -155,7 +153,7 @@ Flattening 과정으로 얻은 column vector의 element 각각이 input으로 �
 
 {% embed url="http://yann.lecun.com/exdb/mnist/" %}
 
-0~9까지의 숫자를 손글씨 데이터셋. 60,000개의 28\*28 pixel의 grayscale 이미지를 training set, 10,000를 test set으로 한다. 
+0~9까지의 숫자를 손글씨 데이터셋. 60,000개의 28\*28 pixel의 grayscale 이미지를 training set, 10,000를 test set으로 분류한다. 
 
 ### Preparing Dataset
 
