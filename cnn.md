@@ -153,5 +153,37 @@ Flattening 과정으로 얻은 column vector의 element 각각이 input으로 �
 
 ### MNIST Handwritten Digit Dataset
 
+{% embed url="http://yann.lecun.com/exdb/mnist/" %}
+
 0~9까지의 숫자를 손글씨 데이터셋. 60,000개의 28\*28 pixel의 grayscale 이미지를 training set, 10,000를 test set으로 한다. 
+
+### Preparing Dataset
+
+```python
+import torch
+import torchvision
+```
+
+```python
+n_epochs = 3
+batch_size_train = 64
+batch_size_test = 1000
+learning_rate = 0.01
+momentum = 0.5
+log_interval = 10
+
+random_seed = 1
+torch.backends.cudnn.enabled = False
+torch.manual_seed(random_seed)
+```
+
+* `torchvision`: datasets, model architecture, 이미지 전처리 도구 등이 있는 package
+* epochs: training 반복 횟수
+* `learning_rate`, `momentum`: hyperparameters
+* line 8, 10: 정확도를 올려주는 일종의 장치? 난수 생성
+* `torch.backends.cudnn.enabled`: cuDNN\(cuda의 딥러닝 라이브러리\)을 disable해줌 
+
+
+
+
 
