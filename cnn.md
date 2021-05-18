@@ -30,7 +30,7 @@
 
 ## Process of CNN
 
-[https://www.superdatascience.com/blogs/the-ultimate-guide-to-convolutional-neural-networks-cnn](https://www.superdatascience.com/blogs/the-ultimate-guide-to-convolutional-neural-networks-cnn)
+{% embed url="https://www.superdatascience.com/blogs/the-ultimate-guide-to-convolutional-neural-networks-cnn" %}
 
 ### Overview
 
@@ -90,7 +90,7 @@ leaky ReLU의 a값을 임의로 지정하여 출력을 내보내는 ReLU
 
 * Average pooling
 * Max pooling
-* Sum pooling
+* ~~Sum pooling~~
 
 #### Max Pooling
 
@@ -108,5 +108,50 @@ feature map에서 각각의 patch의 average 값을 계산, 이를 pooled featur
 
 ![Process of Average Pooling](.gitbook/assets/image%20%2820%29.png)
 
+### Step 3: Flattening
 
+![Flattening](.gitbook/assets/image%20%2822%29.png)
+
+Pooled feature map을 column vector 형태로 'flatten'하는 과정. Feature Map의 값을 이후에 ANN에 삽입해줘야 하기 때문에, 그 과정을 용이하게 하기 위함.
+
+### Step 4: Full Connection
+
+![](.gitbook/assets/image%20%2821%29.png)
+
+세 개의 계층:
+
+* Input layer
+* _Fully-connected layer_ \(ANN에서 'hidden layer'와 대응\)
+* Output layer
+
+1\) Input layer
+
+Flattening 과정으로 얻은 column vector의 element 각각이 input으로 들어감. Step 1-4를 거쳐 얻은 값들이기 때문에, 각각의 element는 "충분한 accuracy"가 있다고 판단한다.
+
+2\) Fully-connected layer ~ Output layer
+
+{% embed url="https://www.superdatascience.com/blogs/convolutional-neural-networks-cnn-step-4-full-connection" %}
+
+직관적으로 과정을 설명하면 다음과 같다.
+
+* fully-connected layer의 neuron이 이미지에 있는 특정한 feature을 탐지\(_detect_\)한다; 가령 개와 고양이 사진을 분류할 때, '코'에 해당하는 부분
+* 합성곱 연산으로 나온 값을 바탕으로 개/고양이의 값과 비교한다.
+* Output layer에 전달, 이미지를 분류함. 
+
+즉 합성곱 연산 + ANN 기반으로 동작함.
+
+### Summary
+
+* We start off with an input image. 
+* We apply filters or feature maps to the image, which gives us a convolutional layer. 
+* We then break up the linearity of that image using the rectifier function. 
+* The image becomes ready for the pooling step, the purpose of which is providing our convolutional neural network with the faculty of “spatial invariance” which you'll see explained in more detail in the pooling tutorial. 
+* After we're done with pooling, we end up with a pooled feature map. 
+* We then flatten our pooled feature map before inserting into an artificial neural network.
+
+## MNIST Handwritten Digit Dataset Classification with PyTorch
+
+### MNIST Handwritten Digit Dataset
+
+0~9까지의 숫자를 손글씨 데이터셋. 60,000개의 28\*28 pixel의 grayscale 이미지를 training set, 10,000를 test set으로 한다. 
 
