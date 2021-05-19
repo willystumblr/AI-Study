@@ -147,6 +147,25 @@ Flattening 과정으로 얻은 column vector의 element 각각이 input으로 �
 * After we're done with pooling, we end up with a pooled feature map. 
 * We then flatten our pooled feature map before inserting into an artificial neural network.
 
+## Softmax function
+
+### 원핫인코딩\(one-hot encoding\)
+
+* one-hot vector: 오직 하나의 element만 1의 값을 가지고 나머지는 모두 0인 벡터
+* one-hot encoding: 모델의 output을 one-hot vector로 변환하는 과정
+  * 각 단어에 고유한 인덱스 부여
+  * 표현하고 싶은 단어의 인덱스 위치에 1을 부여, 다른 단어의 인덱스 위치에는 0을 부여
+
+
+
+### Softmax function
+
+CNN 신경망의 output layer 값이 확률이 아님 --&gt; 입력받은 값을 출력으로 0~1사이의 값으로 모두 정규화하며 출력 값들의 총합은 항상 1이 되도록 변환
+
+$$
+\text{softmax}(y_i) = \frac{\exp(y_i)}{\sum_j\exp{y_i}}
+$$
+
 ## MNIST Handwritten Digit Dataset
 
 ### MNIST Handwritten Digit Dataset
@@ -239,6 +258,8 @@ import torch.nn.functional as F
 import torch.optim as optim
 ```
 
+신경망 class를 정의해서 사용함.
+
 ```python
 class Net(nn.Module):
     def __init__(self):
@@ -257,6 +278,92 @@ class Net(nn.Module):
         x = F.dropout(x, training=self.training)
         x = self.fc2(x)
         return F.log_softmax(x)
+```
+
+* 항상 nn.Module을 상속받고, nn.Module의 `__init__()` 을 실행시켜주는 코드가 필요
+* forward =&gt; forward propagation 함수, nn.Module의 forward 함수를 overriding
+
+```python
+network = Net()
+optimizer = optim.SGD(network.parameters(), lr=learning_rate,
+                momentum=momentum)
+```
+
+NN과 optimizer를 초기화
+
+### Training CNN Model
+
+```python
+train_losses = []
+train_counter = []
+test_losses = []
+test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
+```
+
+```python
+def train(epoch):
+    network.train()
+    for batch_idx, (data, target) in enumerate(train_loader):
+        optimizer.zero_grad()
+        output = network(data)
+        loss = F.nll_loss(output, target)
+        loss.backward()
+        optimizer.step()
+        if batch_idx % log_interval == 0:
+            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+                epoch, batch_idx * len(data), len(train_loader.dataset),
+                100. * batch_idx / len(train_loader), loss.item())
+            )
+            train_losses.append(loss.item())
+            train_counter.append(
+                (batch_idx*64) + ((epoch-1)*len(train_loader.dataset))
+            )
+            torch.save(network.state_dict(), 'Users/minsk/results')
+            torch.save(optimizer.state_dict(), 'Users/minsk/results')
+```
+
+```python
+def test():
+    network.eval()
+    test_loss = 0
+    correct = 0
+    with torch.no_grad():
+        for data, target in test_loader:
+            output = network(data)
+            test_loss += F.nll_loss(output, target, size_average=False).item()
+            pred = output.data.max(1, keepdim=True)[1]
+            correct += pred.eq(target.data.view_as(pred)).sum()
+    test_loss /= len(test_loader.dataset)
+    test_losses.append(test_loss)
+    print('\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
+        test_loss, correct, len(test_loader.dataset),
+        100. * correct / len(test_loader.dataset)))
+```
+
+```python
+test()
+for epoch in range(1, n_epochs + 1):
+    train(epoch)
+    test()
+```
+
+```text
+<ipython-input-8-6c2218f37724>:17: UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument.
+  return F.log_softmax(x)
+/opt/anaconda3/envs/pytorch/lib/python3.9/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+
+
+Test set: Avg. loss: 2.3089, Accuracy: 674/10000 (7%)
+
+Train Epoch: 1 [0/60000 (0%)]	Loss: 2.368649
+Train Epoch: 1 [640/60000 (1%)]	Loss: 2.298366
+Train Epoch: 1 [1280/60000 (2%)]	Loss: 2.294433
+Train Epoch: 1 [1920/60000 (3%)]	Loss: 2.260970
+Train Epoch: 1 [2560/60000 (4%)]	Loss: 2.295450
+Train Epoch: 1 [3200/60000 (5%)]	Loss: 2.239506
+Train Epoch: 1 [3840/60000 (6%)]	Loss: 2.274136
+...
 ```
 
 
