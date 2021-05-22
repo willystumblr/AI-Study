@@ -318,8 +318,8 @@ def train(epoch):
             train_counter.append(
                 (batch_idx*64) + ((epoch-1)*len(train_loader.dataset))
             )
-            torch.save(network.state_dict(), 'Users/minsk/results')
-            torch.save(optimizer.state_dict(), 'Users/minsk/results')
+            torch.save(network.state_dict(), 'Users/minsk/model.pth')
+            torch.save(optimizer.state_dict(), 'Users/minsk/optimizer.pth')
 ```
 
 ```python
@@ -377,4 +377,63 @@ fig
 ```
 
 ![](.gitbook/assets/image%20%2824%29.png)
+
+```python
+with torch.no_grad():
+    output = network(example_data)
+```
+
+```text
+fig = plt.figure()
+for i in range(6):
+    plt.subplot(2,3,i+1)
+    plt.tight_layout()
+    plt.imshow(example_data[i][0], cmap='gray', interpolation='none')
+    plt.title("Prediction: {}".format(
+        output.data.max(1, keepdim=True)[1][i].item()))
+    plt.xticks([])
+    plt.yticks([])
+fig
+```
+
+![](.gitbook/assets/image%20%2826%29.png)
+
+```python
+continued_network = Net()
+continued_optimizer = optim.SGD(network.parameters(), lr=learning_rate,
+                                momentum=momentum)
+```
+
+```python
+network_state_dict = torch.load('Users/minsk/model.pth')
+continued_network.load_state_dict(network_state_dict)
+
+optimizer_state_dict = torch.load('Users/minsk/optimizer.pth')
+continued_optimizer.load_state_dict(optimizer_state_dict)
+```
+
+```python
+for i in range(4,9):
+    test_counter.append(i*len(train_loader.dataset))
+    train(i)
+    test()
+```
+
+```python
+fig = plt.figure()
+plt.plot(train_counter, train_losses, color='blue')
+plt.scatter(test_counter, test_losses, color='red')
+plt.legend(['Train Loss', 'Test Loss'], loc='upper right')
+plt.xlabel('number of training examples seen')
+plt.ylabel('negative log likelihood loss')
+fig
+```
+
+![](.gitbook/assets/image%20%2825%29.png)
+
+## Appendix: CNN w/ Cross Entropy
+
+### Cross Entropy Loss
+
+
 
