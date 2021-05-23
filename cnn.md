@@ -433,9 +433,5 @@ fig
 
 ## Appendix: CNN w/ Cross Entropy
 
-### Cross Entropy Loss
-
-
-
 
 
