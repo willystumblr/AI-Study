@@ -43,7 +43,7 @@
 * _Convolution_
 * _ReLU layer_
 * _Pooling_
-* _Flatening_
+* _Flattening_
 * _Full Connection_
 
 ### Step 1-1: Convolution
