@@ -6,6 +6,8 @@
 
 시각 뉴런 =&gt; 국소적 영역, 단순한 패턴\(단순세포\) + 넓은 영역, 복잡한 패턴\(복잡세포\) = layer
 
+![](.gitbook/assets/image%20%2827%29.png)
+
 > CNN is a **Deep Learning algorithm** which can take in an input **image**, assign importance \(learnable weights and biases\) to various aspects/objects in the image and be able to differentiate one from the other.
 
 "이미지의 공간 정보를 유지한 상태로 학습이 가능한 모델"
