@@ -168,21 +168,6 @@ $$
 
 0~9까지의 숫자를 손글씨 데이터셋. 60,000개의 28\*28 pixel의 grayscale 이미지를 training set, 10,000를 test set으로 분류한다. 
 
-* `torchvision`: datasets, model architecture, 이미지 전처리 도구 등이 있는 package
-* epochs: training 반복 횟수
-* `learning_rate`, `momentum`: hyperparameters
-* line 8, 10: 정확도를 올려주는 일종의 장치? 난수 생성
-* `torch.backends.cudnn.enabled`: cuDNN\(cuda의 딥러닝 라이브러리\)을 disable해줌 
-* `batch_size`: 일괄적으로 데이터를 처리해주기 때문에 training/test set에 대해 이러한 변수 이름을 설정해 줌. 여기서는 training set을 64, test set을 1000으로 설정함.
-* `DataLoader`: datasets, batch size, shuffle 을 argument로 함. 학습을 위한 방대한 데이터를 미니배치 단위로 처리할 수 있고, 데이터를 무작위로 섞음으로써 학습의 효율성을 향상시킬 수 있다는 장점이 있음.
-
-신경망 class를 정의해서 사용함.
-
-* 항상 nn.Module을 상속받고, nn.Module의 `__init__()` 을 실행시켜주는 코드가 필요
-* forward =&gt; forward propagation 함수, nn.Module의 forward 함수를 overriding
-
-NN과 optimizer를 초기화
-
 ## Tutorial
 
 {% embed url="https://colab.research.google.com/drive/1zOP8DKy4yACHLNGdswb3x3GXRqwnCPIl?usp=sharing" %}
