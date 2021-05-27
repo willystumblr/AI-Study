@@ -185,7 +185,9 @@ NN과 optimizer를 초기화
 
 ## Tutorial
 
-{% embed url="https://colab.research.google.com/drive/1zOP8DKy4yACHLNGdswb3x3GXRqwnCPIl\#scrollTo=arNucZS3JKjj" %}
+{% embed url="https://colab.research.google.com/drive/1zOP8DKy4yACHLNGdswb3x3GXRqwnCPIl?usp=sharing" %}
+
+
 
 
 
